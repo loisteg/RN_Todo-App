@@ -1,11 +1,29 @@
-import React from "react";
-import { View, StyleSheet, TextInput, Button } from "react-native";
+import React, { useState } from "react";
+import { View, StyleSheet, TextInput, Button, Alert } from "react-native";
 
-export const AddTodo = (props) => {
+export const AddTodo = ({ onSubmit }) => {
+  const [value, setValue] = useState("");
+
+  const pressHander = () => {
+    if (value.trim()) {
+      onSubmit(value);
+      setValue("");
+    } else {
+      Alert.alert("To do title can't be empty");
+    }
+  };
+
   return (
     <View style={styles.block}>
-      <TextInput style={styles.input} />
-      <Button title="Add" />
+      <TextInput
+        style={styles.input}
+        onChangeText={setValue}
+        value={value}
+        placeholder={"Write title to do"}
+        autoCorrect={false}
+        autoCapitalize="none"
+      />
+      <Button title="Add" onPress={pressHander} />
     </View>
   );
 };
@@ -15,6 +33,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+    marginBottom: 15,
   },
   input: {
     width: "70%",
