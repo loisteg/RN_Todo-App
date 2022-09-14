@@ -7,6 +7,7 @@ import {
   Modal,
   Alert,
 } from "react-native";
+import { AppButton } from "./ui/AppButton";
 import { THEME } from "../theme";
 
 export const EditModal = ({ visible, onCancel, value, onSave }) => {
@@ -38,12 +39,10 @@ export const EditModal = ({ visible, onCancel, value, onSave }) => {
           maxLength={35}
         />
         <View style={styles.buttons}>
-          <Button
-            title="Cancel"
-            onPress={onCancel}
-            color={THEME.DANGER_COLOR}
-          />
-          <Button title="Save" onPress={saveHandler} />
+          <AppButton onPress={onCancel} color={THEME.DANGER_COLOR}>
+            CANCEL
+          </AppButton>
+          <AppButton onPress={saveHandler}>SAVE</AppButton>
         </View>
       </View>
     </Modal>
