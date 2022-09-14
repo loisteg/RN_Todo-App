@@ -23,6 +23,7 @@ export const AddTodo = ({ onSubmit }) => {
         placeholder={"Write title to do"}
         autoCorrect={false}
         autoCapitalize="none"
+        maxLength={35}
       />
       <Button title="Add" onPress={pressHander} />
     </View>
