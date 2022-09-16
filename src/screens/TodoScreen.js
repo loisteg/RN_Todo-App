@@ -1,20 +1,19 @@
-import React, { useState } from "react";
-import { StyleSheet, View, Dimensions } from "react-native";
-
-import { EditModal } from "../components/EditModal";
-import { AppCard } from "../components/ui/AppCard";
-import { AppTextBold } from "../components/ui/AppTextBold";
-import { AppButton } from "../components/ui/AppButton";
-import { FontAwesome, AntDesign } from "@expo/vector-icons";
-import { THEME } from "../theme";
+import React, { useState } from 'react'
+import { StyleSheet, View, Button, Dimensions } from 'react-native'
+import { FontAwesome, AntDesign } from '@expo/vector-icons'
+import { THEME } from '../theme'
+import { AppCard } from '../components/ui/AppCard'
+import { EditModal } from '../components/EditModal'
+import { AppTextBold } from '../components/ui/AppTextBold'
+import { AppButton } from '../components/ui/AppButton'
 
 export const TodoScreen = ({ goBack, todo, onRemove, onSave }) => {
-  const [modal, setModal] = useState(false);
+  const [modal, setModal] = useState(false)
 
-  const saveHandler = (title) => {
-    onSave(todo.id, title);
-    setModal(false);
-  };
+  const saveHandler = title => {
+    onSave(todo.id, title)
+    setModal(false)
+  }
 
   return (
     <View>
@@ -26,20 +25,16 @@ export const TodoScreen = ({ goBack, todo, onRemove, onSave }) => {
       />
 
       <AppCard style={styles.card}>
-        <AppTextBold style={styles.title}>
-          {todo.title.length > 20
-            ? `${todo.title.slice(0, 16)}...`
-            : todo.title}
-        </AppTextBold>
+        <AppTextBold style={styles.title}>{todo.title}</AppTextBold>
         <AppButton onPress={() => setModal(true)}>
-          <FontAwesome name="edit" size={20} />
+          <FontAwesome name='edit' size={20} />
         </AppButton>
       </AppCard>
 
       <View style={styles.buttons}>
         <View style={styles.button}>
           <AppButton onPress={goBack} color={THEME.GREY_COLOR}>
-            <AntDesign name="back" size={20} color={"#fff"} />
+            <AntDesign name='back' size={20} color='#fff' />
           </AppButton>
         </View>
         <View style={styles.button}>
@@ -47,29 +42,28 @@ export const TodoScreen = ({ goBack, todo, onRemove, onSave }) => {
             color={THEME.DANGER_COLOR}
             onPress={() => onRemove(todo.id)}
           >
-            <FontAwesome name="remove" size={20} color={"#fff"} />
+            <FontAwesome name='remove' size={20} color='#fff' />
           </AppButton>
         </View>
       </View>
     </View>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   buttons: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'space-between'
   },
   card: {
     marginBottom: 20,
-    padding: 20,
+    padding: 15
   },
   button: {
-    // width: Dimensions.get("window").width / 3,
-    width: Dimensions.get("window").width > 400 ? 150 : 100,
+    // width: Dimensions.get('window').width / 3
+    width: Dimensions.get('window').width > 400 ? 150 : 100
   },
   title: {
-    fontSize: 20,
-  },
-});
+    fontSize: 20
+  }
+})
