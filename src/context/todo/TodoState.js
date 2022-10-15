@@ -13,6 +13,7 @@ import {
   UPDATE_TODO,
 } from "../types";
 import { ScreenContext } from "../screen/screenContext";
+import { Http } from "../../http";
 
 export const TodoState = ({ children }) => {
   const initialState = {
@@ -24,16 +25,16 @@ export const TodoState = ({ children }) => {
   const [state, dispatch] = useReducer(todoReducer, initialState);
 
   const addTodo = async (title) => {
-    const response = await fetch(
-      "https://rn-todolist-158bd-default-rtdb.europe-west1.firebasedatabase.app/todos.json",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title }),
-      }
-    );
-    const data = await response.json();
-    dispatch({ type: ADD_TODO, title, id: data.name });
+    clearError();
+    try {
+      const data = await Http.post(
+        "https://rn-todolist-158bd-default-rtdb.europe-west1.firebasedatabase.app/todos.json",
+        { title }
+      );
+      dispatch({ type: ADD_TODO, title, id: data.name });
+    } catch (e) {
+      showError("Something gone wrong...");
+    }
   };
 
   const removeTodo = (id) => {
@@ -49,9 +50,18 @@ export const TodoState = ({ children }) => {
         {
           text: "Submit",
           style: "destructive",
-          onPress: () => {
-            changeScreen(null);
-            dispatch({ type: REMOVE_TODO, id });
+          onPress: async () => {
+            clearError();
+            try {
+              changeScreen(null);
+              await Http.delete(
+                `https://rn-todolist-158bd-default-rtdb.europe-west1.firebasedatabase.app/todos/${id}.json`,
+                "DELETE"
+              );
+              dispatch({ type: REMOVE_TODO, id });
+            } catch (e) {
+              showError("Something gone wrong...");
+            }
           },
         },
       ],
@@ -59,19 +69,37 @@ export const TodoState = ({ children }) => {
     );
   };
 
-  const updateTodo = (id, title) => dispatch({ type: UPDATE_TODO, id, title });
+  const updateTodo = async (id, title) => {
+    clearError();
+    try {
+      await Http.patch(
+        `https://rn-todolist-158bd-default-rtdb.europe-west1.firebasedatabase.app/todos/${id}.json`,
+        { title }
+      );
+      dispatch({ type: UPDATE_TODO, id, title });
+    } catch (e) {
+      showError("Something gone wrong...");
+    } finally {
+      hideLoader();
+    }
+  };
 
   const fetchTodos = async () => {
-    const response = await fetch(
-      "https://rn-todolist-158bd-default-rtdb.europe-west1.firebasedatabase.app/todos.json",
-      {
-        headers: { "Content-Type": "application/json" },
-      }
-    );
-    const data = await response.json();
-    const todos = Object.keys(data).map((key) => ({ ...data[key], id: key }));
-    dispatch({ type: FETCH_TODOS, todos });
+    showLoader();
+    clearError();
+    try {
+      const data = await Http.get(
+        "https://rn-todolist-158bd-default-rtdb.europe-west1.firebasedatabase.app/todos.json"
+      );
+      const todos = Object.keys(data).map((key) => ({ ...data[key], id: key }));
+      dispatch({ type: FETCH_TODOS, todos });
+    } catch (e) {
+      showError("Something gone wrong...");
+    } finally {
+      hideLoader();
+    }
   };
+
   const showLoader = () => dispatch({ type: SHOW_LOADER });
   const hideLoader = () => dispatch({ type: HIDE_LOADER });
   const showError = (error) => dispatch({ type: SHOW_ERROR, error });

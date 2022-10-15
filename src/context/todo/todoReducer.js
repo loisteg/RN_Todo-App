@@ -28,10 +28,10 @@ const handlers = {
     }),
   }),
   [FETCH_TODOS]: (state, { todos }) => ({ ...state, todos }),
-  [SHOW_LOADER]: (state) => ({ ...state, loader: true }),
-  [HIDE_LOADER]: (state) => ({ ...state, loader: false }),
-  [SHOW_ERROR]: (state) => ({ ...state, error: null }),
-  [CLEAR_ERROR]: (state, { error }) => ({ ...state, error }),
+  [SHOW_LOADER]: (state) => ({ ...state, loading: true }),
+  [HIDE_LOADER]: (state) => ({ ...state, loading: false }),
+  [SHOW_ERROR]: (state, { error }) => ({ ...state, error }),
+  [CLEAR_ERROR]: (state) => ({ ...state, error: null }),
 
   DEFAULT: (state) => state,
 };
